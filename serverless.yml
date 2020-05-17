@@ -17,8 +17,6 @@ iamRoleStatements:
       - sts:AssumeRole
 
 functions:
-  hello:
-    handler: handler.hello
   transform:
     handler: handler.transform
     name: ${self:service}-${self:custom.stage}-data-transform-lambda
