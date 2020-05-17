@@ -29,4 +29,4 @@ Resources:
                 Action: firehose:PutRecord
                 Resource:
                   - !GetAtt KinesisDeliveryStream.Arn
-          PolicyName: policy
+          PolicyName: ${self:service}_${self:custom.stage}_sending_to_kinesis_policy
