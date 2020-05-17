@@ -2,6 +2,7 @@ service: iot-serverless
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+  serviceName: iot_serverless
   S3BucketNameForKinesisDestination: ${self:service}-${self:custom.stage}-kinesis-destination
 
 provider:

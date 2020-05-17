@@ -1,12 +1,32 @@
 Resources:
   IoTCoreRuleSendingToKinesis:
-    Type: AWS::S3::Bucket
+    Type: AWS::IoT::TopicRule
     Properties:
-      BucketName: ${self:custom.S3BucketNameForKinesisDestination}
-      VersioningConfiguration:
-        Status: Enabled
-    
-Outputs:
-  S3BucketForKinesisDestinationName:
-    Value:
-      Ref: S3BucketForKinesisDestination
+      RuleName: ${self:custom.serviceName}_${self:custom.stage}_send_to_kinesis_rule
+      TopicRulePayload:
+        Actions:
+          - Firehose:
+              DeliveryStreamName: !Ref KinesisDeliveryStream
+              RoleArn: !GetAtt KinesisRuleRole.Arn
+        RuleDisabled: false
+        Sql: !Sub
+          SELECT * FROM 'iot/topic'
+
+  KinesisRuleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ${self:service}_${self:custom.stage}_sending_to_kinesis_role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: iot.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: firehose:PutRecord
+                Resource:
+                  - !GetAtt KinesisDeliveryStream.Arn
+          PolicyName: policy
