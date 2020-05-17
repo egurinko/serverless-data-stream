@@ -1,0 +1,12 @@
+Resources:
+  S3BucketForKinesisDestination:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.S3BucketNameForKinesisDestination}
+      VersioningConfiguration:
+        Status: Enabled
+    
+Outputs:
+  S3BucketForKinesisDestinationName:
+    Value:
+      Ref: S3BucketForKinesisDestination
